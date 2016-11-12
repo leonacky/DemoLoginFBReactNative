@@ -15,7 +15,7 @@ import {
 import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
 
 var LoginBehavior = {
-  'ios': FBLoginManager.LoginBehaviors.Browser,
+  'ios': FBLoginManager.LoginBehaviors.Web,
   'android': FBLoginManager.LoginBehaviors.Native
 }
 
@@ -46,23 +46,39 @@ class FBLoginView extends Component {
     }
 }
 
-
 export default class LoginFB extends Component {
+  login() {
+    FBLoginManager.setLoginBehavior(LoginBehavior[Platform.OS]); // defaults to Native
+    FBLoginManager.loginWithPermissions(["email","user_friends"], function(error, data){
+      if (!error) {
+        console.log("Login data: ", data);
+      } else {
+        console.log("Error: ", error);
+      }
+    })
+  }
   render() {
     return (
-      <FBLogin
-        loginBehavior={LoginBehavior[Platform.OS]}
-        buttonView={<FBLoginView />}
-        ref={(fbLogin) => { this.fbLogin = fbLogin }}
-        loginBehavior={FBLoginManager.LoginBehaviors.Native}
-        permissions={["email","user_friends"]}
-        onLogin={function(e){console.log(e)}}
-        onLoginFound={function(e){console.log(e)}}
-        onLoginNotFound={function(e){console.log(e)}}
-        onLogout={function(e){console.log(e)}}
-        onCancel={function(e){console.log(e)}}
-        onPermissionsMissing={function(e){console.log(e)}}
-      />
+      <Text
+        onPress={() => {
+          this.login();
+        }}
+        style={{backgroundColor: '#ccc', borderWidth: 1, padding: 5, marginTop: 20}}>
+        Login Facebook
+      </Text>
+      // <FBLogin
+      //   loginBehavior={LoginBehavior[Platform.OS]}
+      //   buttonView={<FBLoginView />}
+      //   ref={(fbLogin) => { this.fbLogin = fbLogin }}
+      //   loginBehavior={FBLoginManager.LoginBehaviors.Native}
+      //   permissions={["email","user_friends"]}
+      //   onLogin={function(e){console.log(e)}}
+      //   onLoginFound={function(e){console.log(e)}}
+      //   onLoginNotFound={function(e){console.log(e)}}
+      //   onLogout={function(e){console.log(e)}}
+      //   onCancel={function(e){console.log(e)}}
+      //   onPermissionsMissing={function(e){console.log(e)}}
+      // />
     );
   }
 }
